@@ -22,7 +22,7 @@ post.create_post = function(creator_id, title, body){
         
         query.exec(function (err, post) { // actually execute the query
             if (err) return handleError(err);
-                console.log(post.date_created) // log the _id of the found object in the console in order to verify that something was actually found
+                console.log(post.title) // log the _id of the found object in the console in order to verify that something was actually found
             })
       }
     });

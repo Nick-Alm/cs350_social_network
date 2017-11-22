@@ -3,6 +3,7 @@
  */
 
 var mongoose = require('mongoose');
+var post = require('./post_model.js');
 mongoose.Promise = global.Promise;
 
 var user = mongoose.model('user', { first_name: String,
@@ -12,25 +13,6 @@ var user = mongoose.model('user', { first_name: String,
     friend_list: [String]
     });
     
-user.create_friendship = function(this_user_id, new_friend_id){
-    user.findByIdAndUpdate(
-        this_user_id,
-        {$push: {"friend_list": new_friend_id}},
-        {safe: true, upsert: true},
-        function(err, model) {
-            console.log(err);
-        }
-    );
-        user.findByIdAndUpdate(
-        new_friend_id,
-        {$push: {"friend_list": this_user_id}},
-        {safe: true, upsert: true},
-        function(err, model) {
-            console.log(err);
-        }
-    );
-}
-
 user.create_user = function(first, last, password, email){
     var new_user = new user({ first_name: first, last_name: last, password: password, email: email });
     
@@ -50,5 +32,31 @@ user.create_user = function(first, last, password, email){
       }
     });
 }
+
+user.create_post = function(title, body){
+    var creator_id = self._id;
+    post.create_post(creator_id, title, body);
+}
+
+user.create_friendship = function(this_user_id, new_friend_id){
+    user.findByIdAndUpdate(
+        this_user_id,
+        {$push: {"friend_list": new_friend_id}},
+        {safe: true, upsert: true},
+        function(err, model) {
+            console.log(err);
+        }
+    );
+        user.findByIdAndUpdate(
+        new_friend_id,
+        {$push: {"friend_list": this_user_id}},
+        {safe: true, upsert: true},
+        function(err, model) {
+            console.log(err);
+        }
+    );
+}
+
+
 
 module.exports = user;
